@@ -1,3 +1,4 @@
+import { getFeedbackByInterviewId } from "@/lib/action/general.action";
 import { getRandomInterviewCover } from "@/lib/utils";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -7,8 +8,8 @@ import { Button } from "./ui/button";
 
 
 
-const Interviewcard = ({interviewId, userId, role, type, techstack, createdAt}:InterviewCardProps) => {
-  const feedback = null as Feedback | null;
+const Interviewcard = async ({id, userId, role, type, techstack, createdAt}:InterviewCardProps) => {
+  const feedback = userId && id ? await getFeedbackByInterviewId({interviewId: id,userId}): null; 
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
   const formattedDate = dayjs(feedback?.createdAt || createdAt || Date.now()).format("MMM D,YYYY");
 
@@ -43,8 +44,8 @@ const Interviewcard = ({interviewId, userId, role, type, techstack, createdAt}:I
 
           <Button className="btn-primary">
             <Link href={feedback
-              ? '/interview/${interviewId}/feedback'
-              : '/interview/${interviewId}'
+              ? '/interview/${id}/feedback'
+              : '/interview/${id}'
             }>
               {feedback ? "Check feedback" : "View Interview"}
               </Link>
